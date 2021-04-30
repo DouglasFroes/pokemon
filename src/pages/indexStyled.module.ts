@@ -42,6 +42,11 @@ export const Header = styled.div`
     line-height: 1.6rem;
     padding: 0 1.6rem;
     border-radius: 0.3rem;
+
+    &:focus,
+    &:hover {
+      outline: none;
+    }
   }
 `
 export const Body = styled.div`

@@ -59,7 +59,6 @@ export default function Home(props: propsHome) {
   const [filterText, setFilter] = useState('Todas')
   const [loading, setLoading] = useState(false)
 
-  const searchDebouche = useDebounce(searchPokemon, 0)
   const handleContPage = (pgAll: number, pgCurrent: number) => {
     const numPg = Math.ceil(pgAll)
     const pg = Math.ceil(pgCurrent)
@@ -146,8 +145,10 @@ export default function Home(props: propsHome) {
     newListPokemonLock(result, 6, 0)
   }
 
+  const searchDebouche = useDebounce(handleSearchPokemons, 500)
+
   return (
-    <Layout userName={user} searchPokemons={handleSearchPokemons}>
+    <Layout userName={user} searchPokemons={searchDebouche}>
       {(loadingStor || loading) && <Loading />}
       <Styled.Container>
         <Head>
@@ -210,7 +211,21 @@ export default function Home(props: propsHome) {
                 </button>
               </li>
               <li className="none">
-                <button className={pageCont?.b?.active ? 'active' : undefined}>
+                <button
+                  className={pageCont?.b?.active ? 'active' : undefined}
+                  onClick={() => {
+                    if (pageCont?.a?.active) {
+                      filterText !== 'Todas'
+                        ? newListPokemonLock(listPokemonFilter, 6)
+                        : newListPokemonApi(nextPg, 6)
+                    }
+                    if (pageCont?.c?.active) {
+                      filterText !== 'Todas'
+                        ? newListPokemonLock(listPokemonFilter, -6)
+                        : newListPokemonApi(nextPg, -6)
+                    }
+                  }}
+                >
                   {pageCont?.b.pg}
                 </button>
               </li>
@@ -219,9 +234,12 @@ export default function Home(props: propsHome) {
                   className={pageCont?.c?.active ? 'active' : undefined}
                   onClick={() => {
                     const cont = pageCont?.a?.active ? 12 : 6
+                    const url = pageCont?.a?.active
+                      ? 'https://pokeapi.co/api/v2/pokemon/?offset=12&limit=6'
+                      : nextPg
                     filterText !== 'Todas'
                       ? newListPokemonLock(listPokemonFilter, cont)
-                      : newListPokemonApi(nextPg, 6)
+                      : newListPokemonApi(url, cont)
                   }}
                 >
                   {pageCont?.c.pg}
@@ -243,7 +261,11 @@ export default function Home(props: propsHome) {
           </Styled.Footer>
         </StandardContainer>
         <Styled.SliderFooter>
-          <Carrossel pokemons={pokemonsRandom} />
+          <Carrossel
+            pokemons={pokemonsRandom}
+            addPokemon={addPokemon}
+            user={user}
+          />
         </Styled.SliderFooter>
       </Styled.Container>
     </Layout>

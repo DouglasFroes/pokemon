@@ -25,6 +25,10 @@ export const Container = styled.div`
 `
 
 export const LogoView = styled.div`
+  &:focus,
+  &:hover {
+    filter: brightness(0.7);
+  }
   img {
     width: 9.3rem;
     @media (max-width: 750px) {
@@ -46,8 +50,23 @@ export const SearchView = styled.div`
     border-color: transparent;
     padding: 0 1.3rem;
     font-size: 1.25rem;
+    font-family: Segoe-UI;
     line-height: 1.68rem;
     color: var(--var-color-6);
+    font-weight: 400;
+
+    &:focus,
+    &:hover {
+      outline: none;
+    }
+
+    ::placeholder {
+      font-family: Segoe-UI;
+      font-size: 1.25rem;
+      line-height: 1.68rem;
+      font-weight: 400;
+    }
+
     @media (max-width: 750px) {
       width: auto;
       height: auto;
@@ -114,6 +133,14 @@ export const LoginView = styled.div`
     }
     @media (max-width: 590px) {
       width: 5rem;
+    }
+  }
+
+  button,
+  img {
+    &:focus,
+    &:hover {
+      filter: brightness(0.7);
     }
   }
 `

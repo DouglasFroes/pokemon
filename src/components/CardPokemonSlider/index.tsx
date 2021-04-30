@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 import Button from '../Button'
 import Icon from '../Icon'
@@ -8,10 +9,11 @@ interface propsCard {
   name: string
   id: number
   type: string
+  addPokemon: () => void
 }
 
 export default function CardPokemon(props: propsCard) {
-  const { name, id, type } = props
+  const { name, id, type, addPokemon } = props
 
   return (
     <Styled.Container>
@@ -26,13 +28,20 @@ export default function CardPokemon(props: propsCard) {
       <RenderImg
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
         name={name}
+        className="brightness"
       />
       <div className="card-button">
         <Button label={name} />
       </div>
+
       <div className="btn-pok">
-        <Icon src="/img/eye.png" />
+        <Link href={`pokemon/${id}`}>
+          <div>
+            <Icon src="/img/eye.png" />
+          </div>
+        </Link>
         <Icon
+          onClick={addPokemon}
           src="/img/plus.png"
           style={{ background: '#3AA05B', marginLeft: '1rem' }}
         />

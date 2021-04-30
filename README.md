@@ -33,4 +33,4 @@ yarn start
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ```VIEW WEBSITE````
-[https://telzirdouglasfroes.netlify.app/](https://telzirdouglasfroes.netlify.app/) with your browser to see the result.
+[https://pokemon-douglasfroes.netlify.app/](https://pokemon-douglasfroes.netlify.app/) with your browser to see the result.

@@ -28,6 +28,7 @@ export default function CardPokemon(props: propsCard) {
       <RenderImg
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
         name={name}
+        className="brightness"
       />
       <div className="card-button">
         <Button label={name} />

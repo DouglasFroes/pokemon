@@ -1,5 +1,6 @@
 import React from 'react'
 import Slider from 'react-slick'
+import { alterMyPokemon } from '../../utils/alterPokedex'
 import CardPokemonSlider from '../CardPokemonSlider'
 
 import * as Styled from './styled'
@@ -16,7 +17,7 @@ const CustomPaging = ({ onClick }: any) => {
   return <Styled.customPaging onClick={onClick} />
 }
 
-export default function Carrossel({ pokemons }: any) {
+export default function Carrossel({ pokemons, addPokemon, user }: any) {
   const settings = {
     dots: true,
     infinite: true,
@@ -55,6 +56,7 @@ export default function Carrossel({ pokemons }: any) {
                 name={item?.name}
                 id={item?.id}
                 type={item?.type}
+                addPokemon={() => alterMyPokemon(addPokemon, user, item)}
               />
             </div>
           )

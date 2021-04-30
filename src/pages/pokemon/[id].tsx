@@ -2,18 +2,22 @@ import React from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import nextCookie from 'next-cookies'
-import { NextPageContext } from 'next'
+import { GetStaticPaths, GetStaticProps, NextPageContext } from 'next'
 
 import Layout from '../../components/layout'
 
 import * as Styled from './styled.module'
 import StandardContainer from '../../components/StandardContainer'
 import { showPokemonApi } from '../../utils/apiPokemon'
+import { useRouter } from 'next/router'
 
 export default function Home({ pokemon, user }: any) {
-  console.log(pokemon)
+  const router = useRouter()
+
+  if (router.isFallback) return <p>...carregando</p>
+
   return (
-    <Layout userName={user}>
+    <Layout>
       <Styled.Container>
         <Head>
           <title>{pokemon.name}</title>
@@ -69,12 +73,19 @@ export default function Home({ pokemon, user }: any) {
   )
 }
 
-Home.getInitialProps = async (ctx: NextPageContext) => {
-  const { user } = nextCookie(ctx)
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking'
+  }
+}
 
+export const getStaticProps: GetStaticProps = async item => {
   const pokemon = await showPokemonApi(
-    `https://pokeapi.co/api/v2/pokemon/${ctx.query.id}`,
+    `https://pokeapi.co/api/v2/pokemon/${item.params.id}`,
     true
   )
-  return { pokemon, user }
+  return {
+    props: { pokemon }
+  }
 }

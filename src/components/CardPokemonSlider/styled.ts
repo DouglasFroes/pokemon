@@ -26,12 +26,21 @@ export const Container = styled.div`
   &:focus,
   &:hover {
     div {
-      outline: none;
-      filter: brightness(0.75);
+      div,
+      img,
+      button {
+        outline: none;
+        filter: brightness(0.7);
+      }
+    }
+    .brightness {
+      filter: brightness(0.7);
     }
     .btn-pok {
       display: flex;
-      filter: brightness(1);
+      * {
+        filter: brightness(1);
+      }
     }
   }
 `

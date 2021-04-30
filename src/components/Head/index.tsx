@@ -5,7 +5,7 @@ import * as Styled from './styled'
 import { useRouter } from 'next/router'
 import { signOut } from '../../utils/auth'
 interface propsHeader {
-  userName: string
+  userName?: string
   searchPokemons?: () => void
 }
 
@@ -34,7 +34,9 @@ export default function Header(props: propsHeader) {
           </button>
         ) : (
           <Link href="/login">
-            <button>Login</button>
+            <button className={!searchPokemons ? 'none' : undefined}>
+              Login
+            </button>
           </Link>
         )}
         <img src="/img/logo2.png" />
