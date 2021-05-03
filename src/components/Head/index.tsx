@@ -7,19 +7,22 @@ import { signOut } from '../../utils/auth'
 interface propsHeader {
   userName?: string
   searchPokemons?: () => void
+  init?: boolean
 }
 
 export default function Header(props: propsHeader) {
-  const { userName, searchPokemons } = props
+  const { userName, searchPokemons, init } = props
   const router = useRouter()
 
   return (
     <Styled.Container>
-      <Link href="/">
-        <Styled.LogoView>
-          <img src="/img/logo.png" />
-        </Styled.LogoView>
-      </Link>
+      <Styled.LogoView
+        onClick={() => {
+          init ? router.reload() : router.replace('/')
+        }}
+      >
+        <img src="/img/logo.png" />
+      </Styled.LogoView>
       <Styled.SearchView className={!searchPokemons ? 'none' : undefined}>
         <input placeholder="Search Pokémon" onChange={searchPokemons} />
       </Styled.SearchView>

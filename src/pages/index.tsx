@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import Head from 'next/head'
 import nextCookie from 'next-cookies'
 import { NextPageContext } from 'next'
@@ -40,14 +40,15 @@ export default function Home(props: propsHome) {
     pokemons,
     nextPage,
     previous,
-    pokemonsRandom,
+    // pokemonsRandom,
     allPokemons,
     type,
     user
   } = props
 
-  const [listPokemon, setListPokemon] = useState(pokemons)
+  const [listPokemon, setListPokemon] = useState([])
   const [listPokemonFilter, setListPokemonFilter] = useState([])
+  const [pokemonsRandom, setPokemonsRandom] = useState([])
   const [listCont, setListCont] = useState(6)
   const [pageCont, setPageCont] = useState({
     a: { pg: 1, active: true },
@@ -57,7 +58,7 @@ export default function Home(props: propsHome) {
   const [nextPg, setNextPage] = useState(nextPage)
   const [previousPg, setPreviousPg] = useState(previous)
   const [filterText, setFilter] = useState('Todas')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const handleContPage = (pgAll: number, pgCurrent: number) => {
     const numPg = Math.ceil(pgAll)
@@ -90,6 +91,7 @@ export default function Home(props: propsHome) {
   }
 
   const newListPokemonApi = async (url: string, num: number) => {
+    setLoading(true)
     const pg = (listCont + num) / 6
     handleContPage(allPokemons.length / 2, pg)
 
@@ -98,6 +100,7 @@ export default function Home(props: propsHome) {
     setPreviousPg(pkm.previous)
     setListPokemon(pkm.pokemons)
     setListCont(listCont + num)
+    setLoading(false)
   }
 
   const newListPokemonLock = async (
@@ -147,8 +150,32 @@ export default function Home(props: propsHome) {
 
   const searchDebouche = useDebounce(handleSearchPokemons, 500)
 
+  useEffect(() => {
+    console.log('fdf')
+    ;(async () => {
+      const pok = pokemons.map(async (item: propsPokemon) => {
+        return showPokemonApi(item.url)
+      })
+
+      const pkmRandom = []
+
+      for (let i = 0; i <= 6; i++) {
+        const cont = Math.floor(Math.random() * allPokemons.length + 1)
+
+        const response = await showPokemonApi(
+          `pokemon/${allPokemons[cont]?.name}`
+        )
+        if (response) pkmRandom.push(response)
+      }
+      const result = await Promise.all(pok)
+      setListPokemon(result)
+      setPokemonsRandom(pkmRandom)
+      setLoading(false)
+    })()
+  }, [])
+
   return (
-    <Layout userName={user} searchPokemons={searchDebouche}>
+    <Layout init={true} userName={user} searchPokemons={searchDebouche}>
       {(loadingStor || loading) && <Loading />}
       <Styled.Container>
         <Head>
@@ -274,7 +301,6 @@ export default function Home(props: propsHome) {
 
 Home.getInitialProps = async (ctx: NextPageContext) => {
   const { user } = nextCookie(ctx)
-  console.log(user)
 
   const { data } = await api.get('pokemon', {
     params: {
@@ -293,27 +319,10 @@ Home.getInitialProps = async (ctx: NextPageContext) => {
   })
 
   const allPokemons: any[] = data2.results
-
-  const pok = data.results.map(async (item: propsPokemon) => {
-    return showPokemonApi(item.url)
-  })
-
-  const pkmRandom = []
-
-  for (let i = 0; i <= 10; i++) {
-    const cont = Math.floor(Math.random() * allPokemons.length + 1)
-
-    const response = await showPokemonApi(`pokemon/${allPokemons[cont]?.name}`)
-    if (response) pkmRandom.push(response)
-  }
-
-  const result = await Promise.all(pok)
-  const pokemonsRandom = await Promise.all(pkmRandom)
   return {
     nextPage: data?.next,
     previous: data?.previous,
-    pokemons: result,
-    pokemonsRandom,
+    pokemons: data.results,
     allPokemons,
     type: type?.results,
     user

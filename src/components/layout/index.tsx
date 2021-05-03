@@ -8,7 +8,12 @@ import * as Styled from './styled'
 
 export const siteTitle = 'Portfolio Douglas S. Froes'
 
-const Layout: React.FC<any> = ({ children, searchPokemons, userName }: any) => {
+const Layout: React.FC<any> = ({
+  children,
+  searchPokemons,
+  userName,
+  init
+}: any) => {
   return (
     <Styled.Container>
       <Head>
@@ -26,7 +31,7 @@ const Layout: React.FC<any> = ({ children, searchPokemons, userName }: any) => {
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <Header userName={userName} searchPokemons={searchPokemons} />
+      <Header userName={userName} searchPokemons={searchPokemons} init={init} />
       <Styled.Main>{children}</Styled.Main>
       <Footer />
     </Styled.Container>
