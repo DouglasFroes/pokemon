@@ -151,7 +151,6 @@ export default function Home(props: propsHome) {
   const searchDebouche = useDebounce(handleSearchPokemons, 500)
 
   useEffect(() => {
-    console.log('fdf')
     ;(async () => {
       const pok = pokemons.map(async (item: propsPokemon) => {
         return showPokemonApi(item.url)
