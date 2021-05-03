@@ -16,9 +16,7 @@ export default function TrPokemon(props: propsTrPokemon) {
   return (
     <Styled.Container>
       <td className="image">
-        <Styled.ImgPok
-          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
-        />
+        <Styled.ImgPok id={id} />
         <p className="visible">{name}</p>
       </td>
       <td className="none">

@@ -274,6 +274,7 @@ export default function Home(props: propsHome) {
 
 Home.getInitialProps = async (ctx: NextPageContext) => {
   const { user } = nextCookie(ctx)
+  console.log(user)
 
   const { data } = await api.get('pokemon', {
     params: {

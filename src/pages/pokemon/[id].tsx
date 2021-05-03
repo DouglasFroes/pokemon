@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
-import nextCookie from 'next-cookies'
-import { GetStaticPaths, GetStaticProps, NextPageContext } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 
 import Layout from '../../components/layout'
 
@@ -11,8 +10,12 @@ import StandardContainer from '../../components/StandardContainer'
 import { showPokemonApi } from '../../utils/apiPokemon'
 import { useRouter } from 'next/router'
 
-export default function Home({ pokemon, user }: any) {
+export default function Home({ pokemon }: any) {
+  const [imgErr, setImgErr] = useState(false)
   const router = useRouter()
+
+  const srcDefault = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`
+  const src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`
 
   if (router.isFallback) return <p>...carregando</p>
 
@@ -40,11 +43,14 @@ export default function Home({ pokemon, user }: any) {
           <Styled.Body>
             <div className="image">
               <Image
-                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`}
+                src={imgErr ? srcDefault : src}
                 alt={pokemon.name}
                 width={300}
                 height={300}
                 // sizes="corver"
+                onError={() => {
+                  setImgErr(true)
+                }}
               />
             </div>
             <div>
@@ -54,12 +60,40 @@ export default function Home({ pokemon, user }: any) {
                 <p>Peso: {pokemon.weight / 10} kg</p>
               </div>
               <div className="kills">
-                <h3>skills</h3>
+                <h3>Skills</h3>
                 <ul>
                   {pokemon.moves.map(item => {
                     return (
-                      <li key={item.move.name} className={item.move.name}>
+                      <li key={item.move.name}>
                         <p>{item.move.name};</p>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+              <br />
+              <div className="kills">
+                <h3>Habilidades</h3>
+                <ul>
+                  {pokemon.abilities.map(item => {
+                    return (
+                      <li key={item.ability.name}>
+                        <p>{item.ability.name};</p>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+              <br />
+              <div className="kills">
+                <h3>Estatísticas</h3>
+                <ul>
+                  {pokemon.stats.map((item, index) => {
+                    return (
+                      <li key={index}>
+                        <p>
+                          {item.stat.name}: <span>{item.base_stat};</span>
+                        </p>
                       </li>
                     )
                   })}
